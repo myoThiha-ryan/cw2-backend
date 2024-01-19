@@ -1,0 +1,17 @@
+{
+  "name": "course-work2",
+  "version": "1.0.0",
+  "description": "github-link - https://github.com/myoThiha-ryan/course-work1 website link - https://myothiha-ryan.github.io/course-work1/",
+  "main": "lessons.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2"
+  }
+}
