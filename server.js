@@ -50,10 +50,48 @@ app.use(express.json());
 //   res.send("File not found!");
 // });
 
-app.get("/collections/:collectionName", async function (req, res, next) {
-  const collectionName = req.params.collectionName;
-  const lessons = await db.collection(collectionName).find().toArray();
-  res.send(lessons);
+app.get("/lessons", async function (req, res, next) {
+  const lessonsResult = await db.collection("lessons").find().toArray();
+  res.send(lessonsResult);
+  next();
+});
+
+app.put("/lessons", function (req, res, next) {
+  const lessonsToUpdate = req.body;
+  lessonsToUpdate.forEach(async function (lesson) {
+    await db
+      .collection("lessons")
+      .updateOne(
+        { id: lesson.id },
+        { $set: { availability: lesson.availability } }
+      );
+  });
+  res.send("Updated availability for lessons");
+  next();
+});
+
+app.post("/orders", async function (req, res, next) {
+  const order = req.body;
+  console.log(order);
+  const orderResult = await db
+    .collection("orders")
+    .insertOne(order, { ordered: true });
+  res.send(JSON.stringify(orderResult));
+  next();
+});
+
+app.get("/search", async function (req, res, next) {
+  const searchTerm = req.query.searchTerm;
+  const filteredLessonsResult = await db
+    .collection("lessons")
+    .find({
+      $or: [
+        { title: { $regex: searchTerm, $options: "i" } },
+        { location: { $regex: searchTerm, $options: "i" } },
+      ],
+    })
+    .toArray();
+  res.send(filteredLessonsResult);
 });
 
 app.listen(3000, function () {
